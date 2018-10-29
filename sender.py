@@ -14,7 +14,11 @@ def main():
     client.connect(hostname, 1883, 60)
 
     client.subscribe("ssh_connections", 0)
-    logfile = open("/var/log/auth.log", "r")
+    filename = "/var/log/auth.log"
+    logfile = open(filename, "r")
+    st_results = os.stat(filename)
+    st_size = st_results[6]
+    logfile.seek(st_size)
     while(1):
         where = logfile.tell()
         line = logfile.readline()
@@ -22,7 +26,7 @@ def main():
         if not line:
             logfile.seek(where)
         else:
-            if(re.match(".+pam_unix(sshd:auth): authentication failure.+", line)):
+            if(re.match(".*pam_unix.* authentication failure;.*", line)):
                 client.publish("ssh_connections", "connection")
                 print("Sent message")
         client.loop()
