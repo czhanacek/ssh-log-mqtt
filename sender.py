@@ -18,6 +18,7 @@ def main():
     while(1):
         where = logfile.tell()
         line = logfile.readline()
+        print(line)
         if not line:
             logfile.seek(where)
         else:
