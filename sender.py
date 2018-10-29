@@ -23,6 +23,7 @@ def main():
         else:
             if(re.match(".+pam_unix(sshd:auth): authentication failure.+", line)):
                 client.publish("ssh_connections", "connection")
+                print("Sent message")
         client.loop()
 
 if __name__ == "__main__":
